@@ -1,6 +1,7 @@
 import React from "react";
 import github from "../api/github";
 import WellComePage from "../components/WellcomePage";
+import Spinner from "./Spinner";
 import SearchBar from "./SearchBar";
 import UserList from "./UserList";
 import "./index.css";
@@ -10,7 +11,8 @@ export default class App extends React.Component {
     usersList: [],
     totalUsersCount: 0,
     activePage: 1,
-    totalPagesCount: 0
+    totalPagesCount: 0,
+    isloading: false
   };
 
   memoizingFunction = () => {
@@ -18,6 +20,7 @@ export default class App extends React.Component {
   };
 
   onSearchSumbit = async (skill, location, page = 1) => {
+    this.setState({ isloading: true });
     const responce = await github.get(
       `/search/users?&q=location:${location}+language:${skill}&page=${page}`
     );
@@ -30,14 +33,21 @@ export default class App extends React.Component {
         });
       })
     );
-    this.setState({ usersList: urls, totalUsersCount, totalPagesCount });
+    this.setState({
+      usersList: urls,
+      totalUsersCount,
+      totalPagesCount,
+      isloading: false
+    });
   };
 
   render() {
-    console.log("rendered");
     return (
       <div className="main-wrapper">
-        {this.state.totalUsersCount === 0 ? <WellComePage /> : null}
+        {this.state.totalUsersCount === 0 && this.state.isloading === false ? (
+          <WellComePage />
+        ) : null}
+        {this.state.isloading ? <Spinner /> : null}
         <UserList
           usersList={this.state.usersList}
           totalUsersCount={this.state.totalUsersCount}

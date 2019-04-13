@@ -17,6 +17,19 @@ class SearchBar extends React.Component {
     this.setState({ location: event.target.value });
   };
 
+  onSubmitSearch = () => {
+    this.setState({ activePage: 1 });
+    if (this.state.location === "" || this.state.skill === "") {
+      return 0;
+    } else {
+      this.props.onFormSubmit(
+        this.state.skill,
+        this.state.location,
+        this.state.activePage
+      );
+    }
+  };
+
   onSubmit = () => {
     if (this.state.location === "" || this.state.skill === "") {
       return 0;
@@ -64,7 +77,7 @@ class SearchBar extends React.Component {
               className="search-button right floated ui primary button"
               type="submit"
               value="Search"
-              onClick={this.onSubmit}
+              onClick={this.onSubmitSearch}
             />
           </div>
         </div>
