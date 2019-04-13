@@ -17,7 +17,8 @@ class SearchBar extends React.Component {
     this.setState({ location: event.target.value });
   };
 
-  onSubmitSearch = () => {
+  onSubmitSearch = event => {
+    event.preventDefault();
     this.setState({ activePage: 1 });
     if (this.state.location === "" || this.state.skill === "") {
       return 0;
@@ -58,7 +59,7 @@ class SearchBar extends React.Component {
           <h1>Github Search</h1>
         </div>
         <div className="ui form">
-          <div className="ui field">
+          <form className="ui field" onSubmit={this.onSubmitSearch}>
             <input
               className="search-input"
               type="text"
@@ -79,7 +80,7 @@ class SearchBar extends React.Component {
               value="Search"
               onClick={this.onSubmitSearch}
             />
-          </div>
+          </form>
         </div>
         <div className={this.props.totalUsersCount ? "results" : "results-off"}>
           <span className="user-total">
