@@ -25,9 +25,18 @@ class SearchBar extends React.Component {
       this.props.onFormSubmit(
         this.state.skill,
         this.state.location,
-        this.state.activePage
+        this.props.activePage
       );
     }
+  };
+
+  handlePageChange = async pageNumber => {
+    await this.setState({ activePage: pageNumber });
+    await this.onSubmit(
+      this.state.skill,
+      this.state.location,
+      this.state.activePage
+    );
   };
 
   onSubmit = () => {
@@ -40,15 +49,6 @@ class SearchBar extends React.Component {
         this.state.activePage
       );
     }
-  };
-
-  handlePageChange = async pageNumber => {
-    await this.setState({ activePage: pageNumber });
-    await this.onSubmit(
-      this.state.skill,
-      this.state.location,
-      this.state.activePage
-    );
   };
 
   render() {
