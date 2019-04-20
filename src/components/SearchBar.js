@@ -3,10 +3,18 @@ import Pagination from "react-js-pagination";
 import "./index.css";
 
 class SearchBar extends React.Component {
-  state = {
-    skill: "",
-    location: "",
-    activePage: 1
+  constructor(props) {
+    super(props);
+    this.state = {
+      skill: "",
+      location: "",
+      activePage: 1
+    };
+    this.inputFocus = React.createRef();
+  }
+
+  componentDidMount = () => {
+    this.inputFocus.current.focus();
   };
 
   onChangeSkill = event => {
@@ -17,30 +25,12 @@ class SearchBar extends React.Component {
     this.setState({ location: event.target.value });
   };
 
-  onSubmitSearch = event => {
-    event.preventDefault();
-    this.setState({ activePage: 1 });
-    if (this.state.location === "" || this.state.skill === "") {
-      return 0;
-    } else {
-      this.props.onFormSubmit(
-        this.state.skill,
-        this.state.location,
-        this.props.activePage
-      );
-    }
-  };
-
   handlePageChange = async pageNumber => {
     await this.setState({ activePage: pageNumber });
-    await this.onSubmit(
-      this.state.skill,
-      this.state.location,
-      this.state.activePage
-    );
+    await this.onPagesSubmit();
   };
 
-  onSubmit = () => {
+  onPagesSubmit = () => {
     if (this.state.location === "" || this.state.skill === "") {
       return 0;
     } else {
@@ -52,6 +42,16 @@ class SearchBar extends React.Component {
     }
   };
 
+  onSearchSubmit = event => {
+    event.preventDefault();
+    this.setState({ activePage: 1 });
+    if (this.state.location === "" || this.state.skill === "") {
+      return 0;
+    } else {
+      this.props.onFormSubmit(this.state.skill, this.state.location);
+    }
+  };
+
   render() {
     return (
       <div className="search-segment">
@@ -59,13 +59,14 @@ class SearchBar extends React.Component {
           <h1>Github Search</h1>
         </div>
         <div className="ui form">
-          <form className="ui field" onSubmit={this.onSubmitSearch}>
+          <form className="ui field" onSubmit={this.onSearchSubmit}>
             <input
               className="search-input"
               type="text"
               value={this.state.skill}
               onChange={this.onChangeSkill}
               placeholder="skills"
+              ref={this.inputFocus}
             />
             <input
               className="search-input"
@@ -78,7 +79,7 @@ class SearchBar extends React.Component {
               className="search-button right floated ui primary button"
               type="submit"
               value="Search"
-              onClick={this.onSubmitSearch}
+              onClick={this.onSearchSubmit}
             />
           </form>
         </div>
@@ -89,7 +90,6 @@ class SearchBar extends React.Component {
           <div className="pagination-list">
             <Pagination
               activePage={this.state.activePage}
-              itemsCountPerPage={10}
               totalItemsCount={this.props.totalUsersCount}
               pageRangeDisplayed={5}
               onChange={this.handlePageChange}
