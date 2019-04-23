@@ -2,7 +2,7 @@ import React from "react";
 import UserItem from "./UserItem";
 import { Link } from "react-router-dom";
 
-import "./index.css";
+import "../css/style.css";
 
 class UserList extends React.Component {
   renderedList = () =>

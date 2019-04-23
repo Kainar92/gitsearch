@@ -4,28 +4,59 @@ import WellComePage from "../components/WellcomePage";
 import Spinner from "./Spinner";
 import SearchBar from "./SearchBar";
 import UserList from "./UserList";
-import "./index.css";
+import "../css/style.css";
 
 export default class App extends React.Component {
-  state = {
-    usersList: [],
-    totalUsersCount: 0,
-    isloading: false,
-    skill: "",
-    location: "",
-    currentPage: 1
+  constructor(props) {
+    super(props);
+    this.state = {
+      usersList: [],
+      totalUsersCount: 0,
+      isloading: false,
+      skill: "",
+      location: "",
+      currentPage: 1
+    };
+    this.inputFocus = React.createRef();
+  }
+
+  onChangeSkill = event => {
+    this.setState({ skill: event.target.value });
+    localStorage.setItem("skill", JSON.stringify(event.target.value));
   };
 
-  //Fetching data and cahing it on the localStorage main Function
-  onSearchSumbit = async (skill, location, currentPage = 1) => {
-    // Checking if data already exists on the localStorage or not
+  onChangeLocation = event => {
+    this.setState({ location: event.target.value });
+    localStorage.setItem("location", JSON.stringify(event.target.value));
+  };
+
+  handlePageChange = async pageNumber => {
+    await this.setState({ currentPage: pageNumber });
+    await this.onFormSumbit();
+  };
+
+  onSearchButtonSubmit = event => {
+    event.preventDefault();
+    this.setState({ currentPage: 1 });
+    if (this.state.location === "" || this.state.skill === "") {
+      return 0;
+    } else {
+      this.onFormSumbit();
+    }
+  };
+
+  onFormSumbit = async () => {
+    await this.fetchData();
+  };
+
+  fetchData = async () => {
+    const { skill, location, currentPage, totalUsersCount } = this.state;
     if (
       !localStorage.getItem("pageUsersList") ||
       !JSON.parse(localStorage.getItem("pageUsersList"))[
-        `${currentPage}-${skill}-${location}-${this.state.totalUsersCount}`
+        `${currentPage}-${skill}-${location}-${totalUsersCount}`
       ]
     ) {
-      // if there is no data on localStorage fetch it by using axios
       this.setState({ isloading: true });
       const responce = await github.get(
         `/search/users?&q=location:${location}+language:${skill}&page=${currentPage}`
@@ -48,53 +79,85 @@ export default class App extends React.Component {
       });
       this.cacheData();
     } else {
-      // if there is data already on localStorage update the state to that data
       const cache = JSON.parse(localStorage.pageUsersList);
       this.setState({
         usersList:
-          cache[
-            `${currentPage}-${skill}-${location}-${this.state.totalUsersCount}`
-          ],
+          cache[`${currentPage}-${skill}-${location}-${totalUsersCount}`],
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
       });
     }
   };
 
   cacheData = () => {
-    //--------------Each page Users List Caching on LocalStorage-------------
+    const {
+      currentPage,
+      skill,
+      location,
+      totalUsersCount,
+      usersList
+    } = this.state;
+
     var pageUsersList = JSON.parse(localStorage.getItem("pageUsersList")) || {};
+
     pageUsersList[
-      `${this.state.currentPage}-${this.state.skill}-${this.state.location}-${
-        this.state.totalUsersCount
-      }`
-    ] = this.state.usersList;
+      `${currentPage}-${skill}-${location}-${totalUsersCount}`
+    ] = usersList;
+
     localStorage.setItem("pageUsersList", JSON.stringify(pageUsersList));
-    //---------------------------------------------------------
-    //----------Caching total number of users after first calculating it-------
-    localStorage.setItem(
-      "totalUsersCount",
-      JSON.stringify(this.state.totalUsersCount)
-    ); //----------------------------------------------------------
-    // localStorage.setItem("skill", JSON.stringify(this.state.skill));
-    // localStorage.setItem("location", JSON.stringify(this.state.location));
-    // localStorage.setItem("currentPage", JSON.stringify(this.state.currentPage));
+    localStorage.setItem("totalUsersCount", JSON.stringify(totalUsersCount));
+    localStorage.setItem("currentPage", JSON.stringify(currentPage));
+  };
+
+  componentDidUpdate = () => {
+    sessionStorage.setItem("isFirstMounted", "false");
+  };
+
+  componentDidMount = () => {
+    this.inputFocus.current.focus();
+    if (sessionStorage.getItem("isFirstMounted") === "true") {
+      return;
+    } else {
+      this.setState(
+        {
+          skill: JSON.parse(localStorage.skill),
+          location: JSON.parse(localStorage.location),
+          currentPage: JSON.parse(localStorage.currentPage)
+        },
+        () => {
+          this.fetchData();
+        }
+      );
+    }
   };
 
   render() {
+    const {
+      skill,
+      location,
+      currentPage,
+      totalUsersCount,
+      isloading,
+      usersList
+    } = this.state;
     return (
       <div className="main-wrapper">
-        {this.state.totalUsersCount === 0 && this.state.isloading === false ? (
-          <WellComePage />
+        {totalUsersCount === 0 && isloading === false ? <WellComePage /> : null}
+        {isloading ? <Spinner /> : null}
+        {!isloading ? (
+          <UserList usersList={usersList} totalUsersCount={totalUsersCount} />
         ) : null}
-        {this.state.isloading ? <Spinner /> : null}
-        <UserList
-          usersList={this.state.usersList}
-          totalUsersCount={this.state.totalUsersCount}
-        />
         <SearchBar
-          usersList={this.state.usersList}
-          onFormSubmit={this.onSearchSumbit}
-          totalUsersCount={this.state.totalUsersCount}
+          onChangeSkill={this.onChangeSkill}
+          onChangeLocation={this.onChangeLocation}
+          usersList={usersList}
+          onFormSubmit={this.onFormSumbit}
+          totalUsersCount={totalUsersCount}
+          inputFocus={this.inputFocus}
+          handlePageChange={this.handlePageChange}
+          onSearchButtonSubmit={this.onSearchButtonSubmit}
+          currentPage={currentPage}
+          skill={skill}
+          location={location}
         />
       </div>
     );

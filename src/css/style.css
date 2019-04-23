@@ -19,6 +19,14 @@ body {
   align-items: center;
   margin-right: 380px;
 }
+.for-selected {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .spinner-loader {
   display: block;
 }

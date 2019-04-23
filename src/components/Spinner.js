@@ -1,9 +1,9 @@
 import React from "react";
-import "./index.css";
+import "../css/style.css";
 
-const Spinner = () => {
+const Spinner = ({ type }) => {
   return (
-    <div className="spinner">
+    <div className={type === "centered" ? "for-selected" : "spinner"}>
       <div
         className="spinner-loader spinner-border text-primary"
         role="status"
