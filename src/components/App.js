@@ -46,22 +46,7 @@ export default class App extends React.Component {
         currentPage,
         isloading: false
       });
-      //--------------Each page Users List Caching on LocalStorage-------------
-      var pageUsersList =
-        JSON.parse(localStorage.getItem("pageUsersList")) || {};
-      pageUsersList[
-        `${this.state.currentPage}-${this.state.skill}-${this.state.location}-${
-          this.state.totalUsersCount
-        }`
-      ] = this.state.usersList;
-      localStorage.setItem("pageUsersList", JSON.stringify(pageUsersList));
-      //---------------------------------------------------------
-      //----------Caching total number of users after first calculating it-------
-      localStorage.setItem(
-        "totalUsersCount",
-        JSON.stringify(this.state.totalUsersCount)
-      );
-      //----------------------------------------------------------
+      this.cacheData();
     } else {
       // if there is data already on localStorage update the state to that data
       const cache = JSON.parse(localStorage.pageUsersList);
@@ -73,6 +58,26 @@ export default class App extends React.Component {
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
       });
     }
+  };
+
+  cacheData = () => {
+    //--------------Each page Users List Caching on LocalStorage-------------
+    var pageUsersList = JSON.parse(localStorage.getItem("pageUsersList")) || {};
+    pageUsersList[
+      `${this.state.currentPage}-${this.state.skill}-${this.state.location}-${
+        this.state.totalUsersCount
+      }`
+    ] = this.state.usersList;
+    localStorage.setItem("pageUsersList", JSON.stringify(pageUsersList));
+    //---------------------------------------------------------
+    //----------Caching total number of users after first calculating it-------
+    localStorage.setItem(
+      "totalUsersCount",
+      JSON.stringify(this.state.totalUsersCount)
+    ); //----------------------------------------------------------
+    // localStorage.setItem("skill", JSON.stringify(this.state.skill));
+    // localStorage.setItem("location", JSON.stringify(this.state.location));
+    // localStorage.setItem("currentPage", JSON.stringify(this.state.currentPage));
   };
 
   render() {
