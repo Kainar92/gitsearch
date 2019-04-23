@@ -35,13 +35,13 @@ export default class App extends React.Component {
     await this.onFormSumbit();
   };
 
-  onSearchButtonSubmit = event => {
+  onSearchButtonSubmit = async event => {
     event.preventDefault();
-    this.setState({ currentPage: 1 });
+    await this.setState({ currentPage: 1 });
     if (this.state.location === "" || this.state.skill === "") {
       return 0;
     } else {
-      this.onFormSumbit();
+      await this.onFormSumbit();
     }
   };
 
