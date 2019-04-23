@@ -1,4 +1,4 @@
-You can test the demo here: https://kainar92.github.io/search-app/
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
