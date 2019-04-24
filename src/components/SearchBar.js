@@ -26,7 +26,7 @@ const SearchBar = ({
             type="text"
             value={skill}
             onChange={onChangeSkill}
-            placeholder="skills"
+            placeholder="skill"
             ref={inputFocus}
           />
           <input
@@ -41,6 +41,7 @@ const SearchBar = ({
             type="submit"
             value="Search"
             onClick={onSearchButtonSubmit}
+            disabled={!skill || !location}
           />
         </form>
       </div>

@@ -31,8 +31,16 @@ export default class App extends React.Component {
   };
 
   handlePageChange = async pageNumber => {
-    await this.setState({ currentPage: pageNumber });
-    await this.onFormSumbit();
+    if (JSON.parse(localStorage.currentPage) === pageNumber) {
+      await this.setState({
+        currentPage: JSON.parse(localStorage.currentPage)
+      });
+    } else {
+      await this.setState({ currentPage: pageNumber });
+    }
+    localStorage.setItem("currentPage", JSON.stringify(this.state.currentPage));
+    this.onFormSumbit();
+    window.scrollTo(0, 0);
   };
 
   onSearchButtonSubmit = async event => {
@@ -41,20 +49,20 @@ export default class App extends React.Component {
     if (this.state.location === "" || this.state.skill === "") {
       return 0;
     } else {
-      await this.onFormSumbit();
+      this.onFormSumbit();
     }
   };
 
-  onFormSumbit = async () => {
-    await this.fetchData();
+  onFormSumbit = () => {
+    this.fetchData();
   };
 
   fetchData = async () => {
-    const { skill, location, currentPage, totalUsersCount } = this.state;
+    const { skill, location, currentPage } = this.state;
     if (
       !localStorage.getItem("pageUsersList") ||
       !JSON.parse(localStorage.getItem("pageUsersList"))[
-        `${currentPage}-${skill}-${location}-${totalUsersCount}`
+        `${skill}-${location}-${currentPage}`
       ]
     ) {
       this.setState({ isloading: true });
@@ -72,17 +80,13 @@ export default class App extends React.Component {
       this.setState({
         usersList,
         totalUsersCount,
-        skill,
-        location,
-        currentPage,
         isloading: false
       });
       this.cacheData();
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
       this.setState({
-        usersList:
-          cache[`${currentPage}-${skill}-${location}-${totalUsersCount}`],
+        usersList: cache[`${skill}-${location}-${currentPage}`],
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
       });
     }
@@ -99,9 +103,7 @@ export default class App extends React.Component {
 
     var pageUsersList = JSON.parse(localStorage.getItem("pageUsersList")) || {};
 
-    pageUsersList[
-      `${currentPage}-${skill}-${location}-${totalUsersCount}`
-    ] = usersList;
+    pageUsersList[`${skill}-${location}-${currentPage}`] = usersList;
 
     localStorage.setItem("pageUsersList", JSON.stringify(pageUsersList));
     localStorage.setItem("totalUsersCount", JSON.stringify(totalUsersCount));
@@ -109,10 +111,15 @@ export default class App extends React.Component {
   };
 
   componentDidUpdate = () => {
+    console.log("did update");
     sessionStorage.setItem("isFirstMounted", "false");
+    if (localStorage.scrollPosition) {
+      window.scrollTo(0, JSON.parse(localStorage.scrollPosition));
+    }
   };
 
   componentDidMount = () => {
+    window.addEventListener("scroll", this.handleScroll);
     this.inputFocus.current.focus();
     if (sessionStorage.getItem("isFirstMounted") === "true") {
       return;
@@ -128,6 +135,14 @@ export default class App extends React.Component {
         }
       );
     }
+  };
+
+  handleScroll = () => {
+    localStorage.setItem("scrollPosition", JSON.stringify(window.pageYOffset));
+  };
+
+  componentWillUnmount = () => {
+    window.removeEventListener("scroll", this.handleScroll);
   };
 
   render() {

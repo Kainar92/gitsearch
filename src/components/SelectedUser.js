@@ -37,7 +37,7 @@ const SelectedUserData = ({ user }) => {
   return (
     <React.Fragment>
       <div className="user-avatar">
-        <img src={user.avatar_url} alt="" />
+        <img className="ui image large" src={user.avatar_url} alt="" />
       </div>
       <div className="user-info">
         <div className="user-header">
