@@ -58,11 +58,11 @@ export default class App extends React.Component {
   };
 
   fetchData = async () => {
-    const { skill, location, currentPage } = this.state;
+    const { skill, location, currentPage, totalUsersCount } = this.state;
     if (
       !localStorage.getItem("pageUsersList") ||
       !JSON.parse(localStorage.getItem("pageUsersList"))[
-        `${skill}-${location}-${currentPage}`
+        `${skill}-${location}-${currentPage}-${totalUsersCount}`
       ]
     ) {
       this.setState({ isloading: true });
@@ -86,7 +86,8 @@ export default class App extends React.Component {
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
       this.setState({
-        usersList: cache[`${skill}-${location}-${currentPage}`],
+        usersList:
+          cache[`${skill}-${location}-${currentPage}-${totalUsersCount}`],
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
       });
     }
@@ -103,7 +104,9 @@ export default class App extends React.Component {
 
     var pageUsersList = JSON.parse(localStorage.getItem("pageUsersList")) || {};
 
-    pageUsersList[`${skill}-${location}-${currentPage}`] = usersList;
+    pageUsersList[
+      `${skill}-${location}-${currentPage}-${totalUsersCount}`
+    ] = usersList;
 
     localStorage.setItem("pageUsersList", JSON.stringify(pageUsersList));
     localStorage.setItem("totalUsersCount", JSON.stringify(totalUsersCount));
@@ -111,7 +114,6 @@ export default class App extends React.Component {
   };
 
   componentDidUpdate = () => {
-    console.log("did update");
     sessionStorage.setItem("isFirstMounted", "false");
     if (localStorage.scrollPosition) {
       window.scrollTo(0, JSON.parse(localStorage.scrollPosition));
@@ -128,7 +130,8 @@ export default class App extends React.Component {
         {
           skill: JSON.parse(localStorage.skill),
           location: JSON.parse(localStorage.location),
-          currentPage: JSON.parse(localStorage.currentPage)
+          currentPage: JSON.parse(localStorage.currentPage),
+          totalUsersCount: JSON.parse(localStorage.totalUsersCount)
         },
         () => {
           this.fetchData();
