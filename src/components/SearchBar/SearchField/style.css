@@ -1,0 +1,12 @@
+.app-header {
+  color: white;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.search-input {
+  margin-bottom: 20px !important;
+}
+.search-button {
+  background-color: #007bff !important;
+}

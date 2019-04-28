@@ -1,0 +1,10 @@
+.search-segment {
+  max-width: 380px;
+  min-width: 380px;
+  background-color: #24292e;
+  padding: 45px;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+}

@@ -1,0 +1,38 @@
+.user-item {
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.user-avatar {
+  margin-right: 20px;
+  padding: 10px;
+  background-color: #e4e4e4;
+  line-height: 200px;
+}
+.user-avatar img {
+  width: 180px;
+  height: 180px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 200px;
+}
+.user-info {
+  margin: 0;
+  width: 100%;
+  padding: 10x;
+}
+.user-header {
+  margin-top: 10px;
+  display: flex;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+.user-subtext {
+  display: flex;
+  font-size: 16px;
+  margin-bottom: 10px;
+}

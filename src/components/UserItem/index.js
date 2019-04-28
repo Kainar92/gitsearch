@@ -1,31 +1,32 @@
 import React from "react";
-import "../css/style.css";
+import "./style.css";
 
 const UserItem = ({ user }) => {
+  const { avatar_url, name, login, email, company, location } = user;
   return (
     <div className="user-item">
       <div className="user-avatar">
-        <img src={user.avatar_url} alt="" />
+        <img src={avatar_url} alt="" />
       </div>
       <div className="user-info">
         <div className="user-header">
-          <h2>{!user.name ? "No name" : user.name}</h2>
+          <h2>{!name ? "No name" : name}</h2>
         </div>
         <div className="user-subtext">
           <i className="large id card icon" />
-          <p>{user.login}</p>
+          <p>{login}</p>
         </div>
         <div className="user-subtext">
           <i className="large envelope outline icon" />
-          <p>{!user.email ? "No email" : user.email}</p>
+          <p>{!email ? "No email" : email}</p>
         </div>
         <div className="user-subtext">
           <i className="large building icon" />
-          <p>{!user.company ? "No company" : user.company}</p>
+          <p>{!company ? "No company" : company}</p>
         </div>
         <div className="user-subtext">
           <i className="large location arrow icon" />
-          <p>{!user.location ? "No location" : user.location}</p>
+          <p>{!location ? "No location" : location}</p>
         </div>
       </div>
     </div>

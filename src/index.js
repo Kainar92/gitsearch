@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Router from "./components/Router";
+import App from "./components/App";
 
-if (!sessionStorage.getItem("isFirstMounted")) {
-  sessionStorage.setItem("isFirstMounted", "true");
+if (!sessionStorage.getItem("isMountedFirstTime")) {
+  sessionStorage.setItem("isMountedFirstTime", "true");
 }
 
-ReactDOM.render(<Router />, document.querySelector("#root"));
+ReactDOM.render(<App />, document.querySelector("#root"));
