@@ -51,11 +51,11 @@ class Home extends Component {
 
     if (!localPageUsersList || !JSON.parse(localPageUsersList)[key]) {
       this.setState({ isLoading: true });
-      fetchRequest(skill, location, currentPage).then(usersListFromRequest => {
+      fetchRequest(skill, location, currentPage).then(response => {
         this.setState(
           {
-            usersList: usersListFromRequest["usersList"],
-            totalUsersCount: usersListFromRequest["totalUsersCount"],
+            usersList: response["usersList"],
+            totalUsersCount: response["totalUsersCount"],
             isLoading: false
           },
           () => {
