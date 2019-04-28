@@ -11,6 +11,13 @@ class SearchField extends Component {
     this.inputFocus.current.focus();
   };
 
+  handleEnterPressed = event => {
+    const code = event.keyCode || event.which;
+    if (code === 13) {
+      this.props.onSearchSubmit();
+    }
+  };
+
   render() {
     const {
       skill,
@@ -30,16 +37,18 @@ class SearchField extends Component {
               className="search-input"
               type="text"
               value={skill}
-              onChange={e => onSkillChange(e.target.value)}
               placeholder="skill"
               ref={this.inputFocus}
+              onChange={e => onSkillChange(e.target.value)}
+              onKeyPress={this.handleEnterPressed}
             />
             <input
               className="search-input"
               type="text"
               value={location}
-              onChange={e => onLocationChange(e.target.value)}
               placeholder="location"
+              onChange={e => onLocationChange(e.target.value)}
+              onKeyPress={this.handleEnterPressed}
             />
             <input
               className="search-button right floated ui primary button"
