@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { fetchRequest } from "./api/service";
-import { cacheRequest } from "./api/itils";
+// import { cacheRequest } from "./api/itils";
 import WellcomePage from "../WellcomePage";
 import Spinner from "../Spinner";
 import SearchBar from "../SearchBar";
@@ -44,13 +44,7 @@ class Home extends Component {
   };
 
   submitData = async () => {
-    const {
-      skill,
-      location,
-      currentPage,
-      totalUsersCount,
-      usersList
-    } = this.state;
+    const { skill, location, currentPage, totalUsersCount } = this.state;
 
     const localPageUsersList = localStorage.getItem("pageUsersList");
     const key = `${skill}-${location}-${currentPage}-${totalUsersCount}`;
@@ -58,19 +52,16 @@ class Home extends Component {
     if (!localPageUsersList || !JSON.parse(localPageUsersList)[key]) {
       this.setState({ isLoading: true });
       fetchRequest(skill, location, currentPage).then(usersListFromRequest => {
-        this.setState({
-          usersList: usersListFromRequest["usersList"],
-          totalUsersCount: usersListFromRequest["totalUsersCount"],
-          isLoading: false
-        }).then(() => {
-          cacheRequest(
-            skill,
-            location,
-            currentPage,
-            totalUsersCount,
-            usersList
-          );
-        });
+        this.setState(
+          {
+            usersList: usersListFromRequest["usersList"],
+            totalUsersCount: usersListFromRequest["totalUsersCount"],
+            isLoading: false
+          },
+          () => {
+            this.cacheRequest();
+          }
+        );
       });
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
@@ -79,6 +70,26 @@ class Home extends Component {
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
       });
     }
+  };
+
+  cacheRequest = () => {
+    const {
+      skill,
+      location,
+      currentPage,
+      totalUsersCount,
+      usersList
+    } = this.state;
+    const pageUsersList =
+      JSON.parse(localStorage.getItem("pageUsersList")) || {};
+
+    pageUsersList[
+      `${skill}-${location}-${currentPage}-${totalUsersCount}`
+    ] = usersList;
+
+    localStorage.setItem("pageUsersList", JSON.stringify(pageUsersList));
+    localStorage.setItem("totalUsersCount", JSON.stringify(totalUsersCount));
+    localStorage.setItem("currentPage", JSON.stringify(currentPage));
   };
 
   componentDidMount = () => {
