@@ -1,4 +1,5 @@
 import axios from "axios";
+import { cacheRequest } from "./utils";
 
 export const githubApi = axios.create({
   baseURL: "https://api.github.com",
@@ -26,6 +27,8 @@ export const fetchRequest = async (skill, location, currentPage) => {
       });
     })
   );
+
+  cacheRequest(skill, location, currentPage, totalUsersCount, usersList);
 
   return {
     usersList,

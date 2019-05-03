@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { fetchRequest } from "./api/service";
-// import { cacheRequest } from "./api/itils";
-import WellcomePage from "../WellcomePage";
+import WellcomePage from "./components/WellcomePage";
 import Spinner from "../Spinner";
-import SearchBar from "../SearchBar";
-import UsersList from "../UsersList";
-import ScrollEventHandler from "../ScrollEventHandler";
+import SearchBar from "./components/SearchBar";
+import UsersList from "./components/UsersList";
+import ScrollEventHandler from "./components/ScrollEventHandler";
 
 import "./style.css";
 
@@ -52,16 +51,11 @@ class Home extends Component {
     if (!localPageUsersList || !JSON.parse(localPageUsersList)[key]) {
       this.setState({ isLoading: true });
       fetchRequest(skill, location, currentPage).then(response => {
-        this.setState(
-          {
-            usersList: response["usersList"],
-            totalUsersCount: response["totalUsersCount"],
-            isLoading: false
-          },
-          () => {
-            this.cacheRequest();
-          }
-        );
+        this.setState({
+          usersList: response["usersList"],
+          totalUsersCount: response["totalUsersCount"],
+          isLoading: false
+        });
       });
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
@@ -70,26 +64,6 @@ class Home extends Component {
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
       });
     }
-  };
-
-  cacheRequest = () => {
-    const {
-      skill,
-      location,
-      currentPage,
-      totalUsersCount,
-      usersList
-    } = this.state;
-    const pageUsersList =
-      JSON.parse(localStorage.getItem("pageUsersList")) || {};
-
-    pageUsersList[
-      `${skill}-${location}-${currentPage}-${totalUsersCount}`
-    ] = usersList;
-
-    localStorage.setItem("pageUsersList", JSON.stringify(pageUsersList));
-    localStorage.setItem("totalUsersCount", JSON.stringify(totalUsersCount));
-    localStorage.setItem("currentPage", JSON.stringify(currentPage));
   };
 
   componentDidMount = () => {
