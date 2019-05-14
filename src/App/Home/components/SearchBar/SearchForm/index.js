@@ -1,31 +1,36 @@
 import React, { Component } from "react";
+
 import "./style.css";
 
-class SearchField extends Component {
+class SearchForm extends Component {
   constructor(props) {
     super(props);
-    this.inputFocus = React.createRef();
+
+    this.skillInputRef = React.createRef();
   }
 
-  componentDidMount = () => {
-    this.inputFocus.current.focus();
+  componentDidMount() {
+    this.skillInputRef.current.focus();
+  }
+
+  handleInputChange = event => {
+    if (event.target.name === "skill") {
+      this.props.onSkillChange(event.target.value);
+    } else {
+      this.props.onLocationChange(event.target.value);
+    }
   };
 
-  handleEnterPressed = event => {
+  handleEnterPress = event => {
     const code = event.keyCode || event.which;
+
     if (code === 13) {
       this.props.onSearchSubmit();
     }
   };
 
   render() {
-    const {
-      skill,
-      location,
-      onSkillChange,
-      onLocationChange,
-      onSearchSubmit
-    } = this.props;
+    const { skill, location, onSearchSubmit } = this.props;
     return (
       <>
         <div className="app-header">
@@ -37,18 +42,20 @@ class SearchField extends Component {
               className="search-input"
               type="text"
               value={skill}
+              name="skill"
               placeholder="skill"
-              ref={this.inputFocus}
-              onChange={e => onSkillChange(e.target.value)}
-              onKeyPress={this.handleEnterPressed}
+              ref={this.skillInputRef}
+              onChange={this.handleInputChange}
+              onKeyPress={this.handleEnterPress}
             />
             <input
               className="search-input"
               type="text"
               value={location}
+              name="location"
               placeholder="location"
-              onChange={e => onLocationChange(e.target.value)}
-              onKeyPress={this.handleEnterPressed}
+              onChange={this.handleInputChange}
+              onKeyPress={this.handleEnterPress}
             />
             <input
               className="search-button right floated ui primary button"
@@ -64,4 +71,4 @@ class SearchField extends Component {
   }
 }
 
-export default SearchField;
+export default SearchForm;

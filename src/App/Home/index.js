@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { fetchRequest } from "./api/service";
+import { fetchRequest } from "../api/service";
 import WellcomePage from "./components/WellcomePage";
 import Spinner from "../Spinner";
 import SearchBar from "./components/SearchBar";
@@ -11,6 +11,7 @@ import "./style.css";
 class Home extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       usersList: [],
       totalUsersCount: 0,
@@ -34,22 +35,26 @@ class Home extends Component {
   handlePageChange = async pageNumber => {
     await this.setState({ currentPage: pageNumber });
     localStorage.setItem("currentPage", JSON.stringify(this.state.currentPage));
-    this.submitData().then(() => window.scrollTo(0, 0));
+
+    this.fetchData();
   };
 
   handleSearchSubmit = async () => {
     await this.setState({ currentPage: 1 });
-    this.submitData();
+
+    this.fetchData();
   };
 
-  submitData = async () => {
+  fetchData = async () => {
     const { skill, location, currentPage, totalUsersCount } = this.state;
 
     const localPageUsersList = localStorage.getItem("pageUsersList");
+
     const key = `${skill}-${location}-${currentPage}-${totalUsersCount}`;
 
     if (!localPageUsersList || !JSON.parse(localPageUsersList)[key]) {
       this.setState({ isLoading: true });
+
       fetchRequest(skill, location, currentPage).then(response => {
         this.setState({
           usersList: response["usersList"],
@@ -59,6 +64,7 @@ class Home extends Component {
       });
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
+
       this.setState({
         usersList: cache[key],
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
@@ -66,7 +72,7 @@ class Home extends Component {
     }
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     if (sessionStorage.getItem("isMountedFirstTime") === "true") {
       sessionStorage.setItem("isMountedFirstTime", "false");
       return;
@@ -79,7 +85,7 @@ class Home extends Component {
           totalUsersCount: JSON.parse(localStorage.totalUsersCount)
         },
         () => {
-          this.submitData().then(() => {
+          this.fetchData().then(() => {
             if (localStorage.scrollPosition) {
               window.scrollTo(0, JSON.parse(localStorage.scrollPosition));
             }
@@ -87,17 +93,10 @@ class Home extends Component {
         }
       );
     }
-  };
+  }
 
   render() {
-    const {
-      skill,
-      location,
-      currentPage,
-      totalUsersCount,
-      isLoading,
-      usersList
-    } = this.state;
+    const { totalUsersCount, isLoading, usersList } = this.state;
     return (
       <div className="main-wrapper">
         {!totalUsersCount && !isLoading ? (
@@ -113,10 +112,7 @@ class Home extends Component {
         )}
 
         <SearchBar
-          skill={skill}
-          location={location}
-          currentPage={currentPage}
-          totalUsersCount={totalUsersCount}
+          {...this.state}
           onSkillChange={this.handleSkillChange}
           onLocationChange={this.handleLocationChange}
           onPageChange={this.handlePageChange}

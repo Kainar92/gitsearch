@@ -1,18 +1,18 @@
 import { Component } from "react";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 class ScrollEventHandler extends Component {
   handleScroll = debounce(() => {
     localStorage.setItem("scrollPosition", JSON.stringify(window.pageYOffset));
   }, 200);
 
-  componentDidMount = () => {
+  componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
-  };
+  }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
-  };
+  }
 
   render() {
     return null;

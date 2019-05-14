@@ -1,37 +1,32 @@
 import React, { Component } from "react";
-import { githubApi } from "../Home/api/service";
+import { githubApi } from "../api/service";
 import Spinner from "../Spinner";
+
 import "./style.css";
 
 class UserProfile extends Component {
   state = {
     user: [],
-    isLoading: false,
-    loaderType: "centered"
+    isLoading: false
   };
 
-  componentDidMount = async () => {
+  async componentDidMount() {
     this.setState({ isLoading: true });
     const userId = this.props.location.state.userId;
-    const response = await githubApi.get(`user/${userId}`);
-    await this.setState({ user: response.data, isLoading: false });
-  };
+    const { data: user } = await githubApi.get(`user/${userId}`);
+    this.setState({ user, isLoading: false });
+  }
 
   render() {
     const {
-      avatar_url,
-      name,
-      login,
-      email,
-      company,
-      location
-    } = this.state.user;
-    const { isLoading, loaderType } = this.state;
+      isLoading,
+      user: { avatar_url, name, login, email, company, location }
+    } = this.state;
     return (
       <div className="ui container user-profile">
         <div className="user-item profile-item">
           {isLoading ? (
-            <Spinner type={loaderType} />
+            <Spinner type="centered" />
           ) : (
             <>
               <div className="user-avatar">

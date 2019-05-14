@@ -1,5 +1,5 @@
 import React from "react";
-import SearchField from "./SearchField";
+import SearchForm from "./SearchForm";
 import PaginatedResult from "./PaginatedResult";
 
 import "./style.css";
@@ -16,7 +16,7 @@ const SearchBar = ({
 }) => {
   return (
     <div className="search-segment">
-      <SearchField
+      <SearchForm
         skill={skill}
         location={location}
         onSkillChange={onSkillChange}

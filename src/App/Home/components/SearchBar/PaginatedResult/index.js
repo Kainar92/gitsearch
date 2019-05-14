@@ -1,5 +1,6 @@
 import React from "react";
 import Pagination from "react-js-pagination";
+
 import "./style.css";
 
 const PaginatedResult = ({ currentPage, totalUsersCount, onPageChange }) => {
