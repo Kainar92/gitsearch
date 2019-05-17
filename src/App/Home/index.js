@@ -9,18 +9,14 @@ import ScrollEventHandler from "./components/ScrollEventHandler";
 import "./style.css";
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      usersList: [],
-      totalUsersCount: 0,
-      isLoading: false,
-      skill: "",
-      location: "",
-      currentPage: 1
-    };
-  }
+  state = {
+    usersList: [],
+    totalUsersCount: 0,
+    isLoading: false,
+    skill: "",
+    location: "",
+    currentPage: 1
+  };
 
   handleSkillChange = skill => {
     this.setState({ skill });
