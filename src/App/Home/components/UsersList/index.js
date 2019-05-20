@@ -23,7 +23,6 @@ const UsersList = ({ usersList, totalUsersCount }) => {
             </Link>
           );
         })}
-        ;
       </div>
     );
   } else {
