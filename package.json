@@ -12,7 +12,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8"
   },
-  "homepage": "https://kainar92.github.io/gitsearch",
+  "homepage": "https://Kainar92.github.io/gitsearch",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
