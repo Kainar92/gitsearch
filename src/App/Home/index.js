@@ -52,11 +52,13 @@ class Home extends Component {
       this.setState({ isLoading: true });
 
       fetchRequest(skill, location, currentPage).then(response => {
+
         this.setState({
           usersList: response["usersList"],
           totalUsersCount: response["totalUsersCount"],
           isLoading: false
         });
+        
       });
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
