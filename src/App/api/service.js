@@ -1,8 +1,8 @@
-import axios from "axios";
-import { cacheRequest } from "./utils";
+import axios from 'axios';
+import { cacheRequest } from './utils';
 
 export const githubApi = axios.create({
-  baseURL: "https://api.github.com",
+  baseURL: 'https://api.github.com',
 
   headers: {
     Accept: "application/json",
