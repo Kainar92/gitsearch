@@ -58,7 +58,7 @@ class Home extends Component {
           totalUsersCount: response["totalUsersCount"],
           isLoading: false
         });
-        
+
       });
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
@@ -91,7 +91,7 @@ class Home extends Component {
         }
       );
     }
-  }
+  } 
 
   render() {
     const { totalUsersCount, isLoading, usersList } = this.state;
