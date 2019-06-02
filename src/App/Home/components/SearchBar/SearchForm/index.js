@@ -3,9 +3,9 @@ import React, { Component } from "react";
 import "./style.css";
 
 class SearchForm extends Component {
+
   constructor(props) {
     super(props);
-
     this.skillInputRef = React.createRef();
   }
 
@@ -14,19 +14,23 @@ class SearchForm extends Component {
   }
 
   handleInputChange = event => {
+
     if (event.target.name === "skill") {
       this.props.onSkillChange(event.target.value);
     } else {
       this.props.onLocationChange(event.target.value);
     }
+
   };
 
   handleEnterPress = event => {
+
     const code = event.keyCode || event.which;
 
     if (code === 13) {
       this.props.onSearchSubmit();
     }
+    
   };
 
   render() {
