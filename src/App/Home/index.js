@@ -1,68 +1,59 @@
-import React, { Component } from "react";
-import { fetchRequest } from "../api/service";
-import WellcomePage from "./components/WellcomePage";
-import Spinner from "../Spinner";
-import SearchBar from "./components/SearchBar";
-import UsersList from "./components/UsersList";
-import ScrollEventHandler from "./components/ScrollEventHandler";
-
-import "./style.css";
+import React, { Component } from 'react';
+import { fetchRequest } from '../api/service';
+import WellcomePage from './components/WellcomePage';
+import Spinner from '../Spinner';
+import SearchBar from './components/SearchBar';
+import UsersList from './components/UsersList';
+import ScrollEventHandler from './components/ScrollEventHandler';
+import './style.css';
 
 class Home extends Component {
   state = {
     usersList: [],
     totalUsersCount: 0,
     isLoading: false,
-    skill: "",
-    location: "",
+    skill: '',
+    location: '',
     currentPage: 1
   };
 
   handleSkillChange = skill => {
     this.setState({ skill });
-    localStorage.setItem("skill", skill);
+    localStorage.setItem('skill', skill);
   };
 
   handleLocationChange = location => {
     this.setState({ location });
-    localStorage.setItem("location", location);
+    localStorage.setItem('location', location);
   };
 
   handlePageChange = async pageNumber => {
     await this.setState({ currentPage: pageNumber });
-    localStorage.setItem("currentPage", JSON.stringify(this.state.currentPage));
-
+    localStorage.setItem('currentPage', JSON.stringify(this.state.currentPage));
     this.fetchData();
   };
 
   handleSearchSubmit = async () => {
     await this.setState({ currentPage: 1 });
-
     this.fetchData();
   };
 
   fetchData = async () => {
     const { skill, location, currentPage, totalUsersCount } = this.state;
-
-    const localPageUsersList = localStorage.getItem("pageUsersList");
-
+    const localPageUsersList = localStorage.getItem('pageUsersList');
     const key = `${skill}-${location}-${currentPage}-${totalUsersCount}`;
 
     if (!localPageUsersList || !JSON.parse(localPageUsersList)[key]) {
       this.setState({ isLoading: true });
-
       fetchRequest(skill, location, currentPage).then(response => {
-
         this.setState({
-          usersList: response["usersList"],
-          totalUsersCount: response["totalUsersCount"],
+          usersList: response['usersList'],
+          totalUsersCount: response['totalUsersCount'],
           isLoading: false
         });
-
       });
     } else {
       const cache = JSON.parse(localStorage.pageUsersList);
-
       this.setState({
         usersList: cache[key],
         totalUsersCount: JSON.parse(localStorage.totalUsersCount)
@@ -71,8 +62,8 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    if (sessionStorage.getItem("isMountedFirstTime") === "true") {
-      sessionStorage.setItem("isMountedFirstTime", "false");
+    if (sessionStorage.getItem('isMountedFirstTime') === 'true') {
+      sessionStorage.setItem('isMountedFirstTime', 'false');
       return;
     } else {
       this.setState(
@@ -91,7 +82,7 @@ class Home extends Component {
         }
       );
     }
-  } 
+  }
 
   render() {
     const { totalUsersCount, isLoading, usersList } = this.state;
